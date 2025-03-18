@@ -1,11 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vending Machine</title>
 </head>
+<style>
+	body {
+		background-color: black;
+		color: white;
+		text-align: center;
+		font-family: Arial, sans-serif;
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+	}
+
+	.money-input-group {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	input, select, button {
+		margin: 10px;
+		padding: 10px;
+		font-size: 16px;
+	}
+
+	button {
+		cursor: pointer;
+	}
+</style>
 <body>
-    hello world!!
+
+	<div class="container">
+		<div class="money-input-group">
+			<input type="number" value="" id="flips-input">
+			<button onclick="insertMoney();">Insert Money</button>
+		</div>
+
+	<div id="results">Current Balance: $0</div>
+
+	<select name="drinks" id="drink-select">
+		<option value="">--Please choose a drink--</option>
+		<option value="Coca Cola">Coca Cola - $10.00</option>
+		<option value="Water">Water - $1.00</option>
+		<option value="Sprite">Sprite - $5.00</option>
+		<option value="Dr Pepper">Dr Pepper - $2.00</option>
+		<option value="Fanta">Fanta - $4.00</option>
+		<option value="Mountain Dew">Mountain Dew - $8.00</option>
+		<option value="Powerade">Powerade - $20.00</option>
+	</select>
+
+	<button onclick="selectDrink();">Purchase Drink</button>
+	<button onclick="returnMoney();">Return Money</button>
+
+	<script>
+	
+		let drinks = { 
+			"Coca Cola": 10.00,
+			"Water": 1.00,
+			"Sprite": 5.00,
+			"Dr Pepper": 2.00,
+			"Fanta": 4.00,
+			"Mountain Dew": 8.00,
+			"Powerade": 20.00
+		};
+
+		let balance = 0;  
+
+		function insertMoney() {
+			const currentBalance = document.querySelector('#results');
+			const inputMoney = document.querySelector('#flips-input');
+			const amount = Math.floor(inputMoney.value);
+
+			if (amount > 0) {  
+				balance += amount; 
+				currentBalance.innerHTML = "Current Balance: $" + balance;
+				inputMoney.value = "";
+			} else {
+				alert("Please enter a valid amount.");
+			}
+		}
+		
+		function selectDrink(){
+			let currentBalance = document.querySelector('#results');
+			let selectElement = document.querySelector('#drink-select');
+			let selectedDrink = selectElement.value;
+
+			if (!selectedDrink) {
+				alert("Please select a drink.");
+				return;
+			}
+
+			let drinkPrice = drinks[selectedDrink];
+
+			if (balance >= drinkPrice) {
+				balance -= drinkPrice;
+				alert("You purchased " + selectedDrink + " for $" + drinkPrice + 
+      				". Remaining balance: $" + balance);
+				currentBalance.innerHTML = "Current Balance: $" + balance;
+			} else {
+				alert("Insufficient funds. Please add more money.");
+			}
+		}
+		
+		function returnMoney() {
+    	let currentBalance = document.querySelector("#results");
+
+    if (balance > 0) {
+        let amountToReturn = balance;
+        let bills = [5, 1];
+        let returnMessage = "Returning:\n";
+
+        for (let i = 0; i < bills.length; i++) {
+            let count = Math.floor(amountToReturn / bills[i]);
+            amountToReturn -= count * bills[i];
+
+            if (count > 0) {
+                returnMessage += "$" + bills[i] + " x " + count + "\n";
+            }
+        }
+
+        alert(returnMessage + "Your balance is now $0.");
+        balance = 0;
+        currentBalance.innerHTML = "Current Balance: $0";
+    } else {
+        alert("No money to return.");
+    }
+}
+
+	</script>
 </body>
+
 </html>
